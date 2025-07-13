@@ -32,8 +32,8 @@ start_api_server() {
     
     # Check if port 8000 is available
     if port_in_use 8000; then
-        echo -e "${YELLOW}⚠️  Port 8000 is already in use. API server might already be running.${NC}"
-        echo -e "${YELLOW}   Check http://localhost:8000/health${NC}"
+        echo -e "${YELLOW}⚠️  Port 8002 is already in use. API server might already be running.${NC}"
+        echo -e "${YELLOW}   Check http://localhost:8002/health${NC}"
     else
         # Start the API server in background
         if command_exists python3; then
@@ -44,8 +44,7 @@ start_api_server() {
         
         API_PID=$!
         echo -e "${GREEN}✅ API Server started (PID: $API_PID)${NC}"
-        echo -e "${GREEN}   Available at: http://localhost:8000${NC}"
-        echo -e "${GREEN}   FastAPI docs: http://localhost:8000/docs${NC}"
+        echo -e "${GREEN}   Available at: http://localhost:8002${NC}"
     fi
 }
 
@@ -101,7 +100,7 @@ wait_for_services() {
     sleep 3
     
     # Check API server health
-    if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+    if curl -s http://localhost:8002/health > /dev/null 2>&1; then
         echo -e "${GREEN}✅ API Server is healthy${NC}"
     else
         echo -e "${YELLOW}⚠️  API Server health check failed${NC}"
@@ -121,10 +120,8 @@ show_final_info() {
     echo -e "${GREEN}🎉 Services are running!${NC}"
     echo ""
     echo -e "${BLUE}📊 API Server:${NC}"
-    echo -e "   🔗 Main API: http://localhost:8000"
-    echo -e "   🔗 Health Check: http://localhost:8000/health"
-    echo -e "   🔗 FastAPI Docs: http://localhost:8000/docs"
-    echo -e "   🔗 ReDoc: http://localhost:8000/redoc"
+    echo -e "   🔗 Main API: http://localhost:8002"
+    echo -e "   🔗 Health Check: http://localhost:8002/health"
     echo ""
     echo -e "${BLUE}📚 Documentation:${NC}"
     echo -e "   🔗 Beautiful Docs: http://localhost:5002/docs"

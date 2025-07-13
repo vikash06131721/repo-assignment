@@ -1,95 +1,188 @@
 # ML Feature Engineering API Documentation
 
-## Table of Contents
-1. [Problem Description](#problem-description)
-2. [Solution Overview](#solution-overview)
-3. [How to Start the API Services](#how-to-start-the-api-services)
-4. [How to Use the API](#how-to-use-the-api)
-5. [API Endpoints](#api-endpoints)
-6. [Testing the API](#testing-the-api)
-7. [Troubleshooting](#troubleshooting)
+## Problem Statement
+
+Financial institutions face significant challenges in processing contract data for machine learning applications. The specific problems include:
+
+### Key Challenges
+1. **Complex Data Processing**: Financial contract data comes in various formats with inconsistent date formats (DD.MM.YYYY vs ISO format) and mixed data types that require robust parsing and validation.
+
+2. **Critical Feature Engineering**: Three essential features need to be calculated accurately for risk assessment:
+   - **tot_claim_cnt_l180d**: Count of claims made within the last 180 days from application date
+   - **disb_bank_loan_wo_tbc**: Sum of disbursed loan amounts excluding specific banks (LIZ, LOM, MKO, SUG)
+   - **day_sinlastloan**: Number of days since the most recent loan contract
+
+3. **Data Quality Issues**: Handle missing values, invalid dates, and inconsistent data formats while maintaining calculation accuracy.
+
+4. **Scalability Requirements**: Process multiple contracts per application efficiently with real-time response times.
+
+5. **Integration Needs**: Provide a reliable, well-documented API interface that can be easily integrated into existing ML pipelines and risk assessment systems.
+
+6. **Business Logic Complexity**: Implement special handling for edge cases, such as returning -1 for no data scenarios and -3 for no claims scenarios.
 
 ---
 
-## Problem Description
+## What We Solved
 
-### The Challenge
-Financial institutions need to calculate specific machine learning features from contract data to assess risk and make lending decisions. The original challenge involved:
+Our solution addresses all the identified challenges through a comprehensive FastAPI-based system:
 
-1. **Complex Data Processing**: Processing financial contract data with various date formats and data types
-2. **Feature Engineering**: Calculating three critical features:
-   - `tot_claim_cnt_l180d`: Number of claims in the last 180 days
-   - `disb_bank_loan_wo_tbc`: Sum of disbursed loans excluding TBC banks
-   - `day_sinlastloan`: Days since the last loan
-3. **Data Validation**: Ensuring data integrity and handling edge cases
-4. **Scalability**: Processing multiple contracts per application efficiently
-5. **Integration**: Providing a reliable API interface for ML pipelines
+### Technical Solutions Implemented
 
-### Business Impact
-- **Risk Assessment**: Accurate feature calculation for credit risk models
-- **Decision Speed**: Real-time feature generation for loan applications
-- **Data Quality**: Consistent feature engineering across applications
-- **Compliance**: Standardized calculations for regulatory requirements
+#### 1. **Robust Data Processing Engine**
+- **Flexible Date Parsing**: Handles both DD.MM.YYYY and ISO datetime formats seamlessly
+- **Type Safety**: Pydantic models ensure data validation and automatic type conversion
+- **Error Handling**: Comprehensive exception handling with meaningful error messages
+- **Edge Case Management**: Special value handling (-1, -3) for missing data scenarios
 
----
+#### 2. **High-Performance API Architecture**
+- **FastAPI Framework**: Asynchronous processing for concurrent request handling
+- **Automatic Documentation**: Built-in OpenAPI/Swagger documentation generation
+- **CORS Support**: Cross-origin resource sharing for browser-based integrations
+- **RESTful Design**: Standard HTTP methods and status codes
 
-## Solution Overview
+#### 3. **Accurate Feature Engineering Logic**
+- **tot_claim_cnt_l180d**: Precise date arithmetic to filter claims within 180-day window
+- **disb_bank_loan_wo_tbc**: Bank filtering logic excluding TBC-related institutions
+- **day_sinlastloan**: Intelligent date comparison to find the most recent loan contract
 
-### How We Solved the Problem
-
-We developed a comprehensive FastAPI-based solution that addresses all the challenges:
-
-#### 1. **FastAPI Framework**
-- **High Performance**: Asynchronous processing for concurrent requests
-- **Automatic Documentation**: Built-in OpenAPI/Swagger documentation
-- **Type Safety**: Pydantic models for request/response validation
-- **Easy Integration**: RESTful API design
-
-#### 2. **Robust Data Processing**
-- **Date Handling**: Flexible date parsing for DD.MM.YYYY and ISO formats
-- **Data Validation**: Comprehensive input validation with error handling
-- **Edge Case Management**: Special values for missing/invalid data
-- **Type Conversion**: Automatic type conversion and validation
-
-#### 3. **Feature Engineering Logic**
-- **tot_claim_cnt_l180d**: Filters claims within 180 days using date arithmetic
-- **disb_bank_loan_wo_tbc**: Excludes TBC banks and sums valid loan amounts
-- **day_sinlastloan**: Calculates days difference from most recent contract
-
-#### 4. **Interactive Documentation**
-- **Beautiful UI**: Modern, responsive documentation interface
-- **Live API Testing**: Interactive API tester with real-time validation
+#### 4. **Developer-Friendly Documentation**
+- **Interactive API Testing**: Live API tester with real-time validation
 - **Code Examples**: Sample requests in Python, JavaScript, and cURL
-- **Server Monitoring**: Real-time API server status indicator
+- **Beautiful UI**: Modern, responsive documentation interface
+- **Real-time Monitoring**: Server status indicators and health checks
 
-#### 5. **Development Tools**
-- **Hot Reload**: Automatic server restart during development
-- **Error Handling**: Comprehensive error messages and logging
-- **CORS Support**: Cross-origin requests for browser-based testing
+#### 5. **Production-Ready Features**
+- **Health Check Endpoints**: System monitoring and uptime verification
+- **Structured Logging**: Comprehensive error tracking and debugging
+- **Multiple Input Formats**: Support for both structured JSON and string-based inputs
+- **Scalable Architecture**: Designed to handle high-volume production workloads
 
 ---
 
-## How to Start the API Services
+## How to Start the API
 
 ### Prerequisites
-- Python 3.8 or higher
-- Conda package manager
-- Node.js and npm
+Before starting the API, ensure you have the following installed:
+- **Python 3.8+**: For running the FastAPI server
+- **Node.js 14+**: For the documentation server
+- **npm**: Package manager for Node.js dependencies
+
+### Quick Start Guide
+
+#### Method 1: Using the Start Script (Recommended)
+The easiest way to start both services is using the provided start script:
+
+```bash
+# Navigate to project directory
+cd ml-assignment
+
+# Make the script executable (Linux/Mac)
+chmod +x start_services.sh
+
+# Run the start script
+./start_services.sh
+```
+
+#### Method 2: Manual Start
+If you prefer to start services manually:
+
+```bash
+# Terminal 1: Start API Server
+cd ml-assignment
+python main.py
+
+# Terminal 2: Start Documentation Server
+cd docs
+npm start
+```
+
+### Expected Output
+When you run the start script, you should see output similar to this:
+
+![API Startup Process](../start_services_screenshot.png)
+
+**Terminal Output:**
+```
+🚀 ML Feature Engineering API & Documentation Setup
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📡 Starting FastAPI Server...
+✅ API Server started (PID: 23501)
+   Available at: http://localhost:8002
+
+📚 Starting Documentation Server...
+✅ Documentation Server started (PID: 23504)
+   Available at: http://localhost:5002/docs
+
+⏳ Waiting for services to start...
+✅ API Server is healthy
+✅ Documentation Server is healthy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎉 Services are running!
+
+📊 API Server:
+   🔗 Main API: http://localhost:8002
+   🔗 Health Check: http://localhost:8002/health
+
+📚 Documentation:
+   🔗 Beautiful Docs: http://localhost:5002/docs
+   🔗 Interactive API Tester: http://localhost:5002/docs#testing
+   🔗 Code Examples: http://localhost:5002/docs#examples
+
+💡 Tips:
+   • Use the interactive tester at http://localhost:5002/docs#testing
+   • Copy code examples from the documentation
+   • Monitor server status in real-time
+   • Press Ctrl+C to stop both services
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Press Ctrl+C to stop all services...
+```
+
+### Service Verification
+After starting the services, verify they're running:
+
+1. **API Server**: Visit http://localhost:8002/health
+2. **Documentation**: Visit http://localhost:5002/docs
+3. **FastAPI Docs**: Visit http://localhost:8002/docs
+
+---
+
+## How to Install Requirements
 
 ### Step 1: Environment Setup
 ```bash
 # Navigate to project directory
 cd ml-assignment
 
-# Create and activate conda environment
-conda create -n new_nlp python=3.8
-conda activate new_nlp
+# Create virtual environment (recommended)
+python -m venv ml-env
 
-# Install Python dependencies
+# Activate virtual environment
+# On Windows:
+ml-env\Scripts\activate
+# On macOS/Linux:
+source ml-env/bin/activate
+```
+
+### Step 2: Install Python Dependencies
+```bash
+# Install all Python requirements
 pip install -r requirements.txt
 ```
 
-### Step 2: Install Documentation Dependencies
+#### Required Python Packages
+The `requirements.txt` file includes:
+- **fastapi>=0.104.0**: Web framework for building APIs
+- **uvicorn[standard]>=0.24.0**: ASGI server for FastAPI
+- **pandas>=2.0.0**: Data manipulation and analysis
+- **numpy>=1.24.0**: Numerical computing support
+- **pydantic>=2.4.0**: Data validation and serialization
+- **python-multipart>=0.0.6**: Support for form data
+
+### Step 3: Install Documentation Dependencies
 ```bash
 # Navigate to docs directory
 cd docs
@@ -98,63 +191,44 @@ cd docs
 npm install
 ```
 
-### Step 3: Start the Main API Server
+#### Documentation Dependencies
+The documentation server requires:
+- **express**: Web framework for Node.js
+- **cors**: Cross-origin resource sharing
+- **body-parser**: Request body parsing middleware
+
+### Step 4: Verify Installation
 ```bash
-# Navigate back to project root
+# Check Python dependencies
+pip list
+
+# Check Node.js dependencies
+cd docs
+npm list
+
+# Test API server
 cd ..
-
-# Activate conda environment
-conda activate new_nlp
-
-# Start the FastAPI server
-python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+python -c "import fastapi, uvicorn, pandas, numpy, pydantic; print('All Python dependencies installed successfully')"
 ```
-
-**Expected Output:**
-```
-INFO:     Started server process [18766]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-```
-
-### Step 4: Start the Documentation Server
-```bash
-# Open a new terminal window
-# Navigate to docs directory
-cd tatia/docs
-
-# Start the documentation server
-npm start
-```
-
-**Expected Output:**
-```
-> ml-feature-api-docs@1.0.0 start
-> node server.js
-
-📚 Documentation server running at http://localhost:5002
-🌐 Access docs at: http://localhost:5002/docs
-```
-
-### Step 5: Verify Both Services Are Running
-- **Main API**: http://localhost:8000/health
-- **Documentation**: http://localhost:5002/docs
-- **FastAPI Docs**: http://localhost:8000/docs
 
 ---
 
-## How to Use the API
+## Usage
 
-### 1. Health Check
-**Purpose**: Verify the API is running properly
+### API Endpoints Documentation
 
-**Request:**
+#### 1. Health Check Endpoint
+
+**Endpoint**: `GET /health`
+
+**Description**: Verifies that the API server is running and healthy.
+
+**Request**:
 ```bash
-curl -X GET http://localhost:8000/health
+curl -X GET http://localhost:8002/health
 ```
 
-**Response:**
+**Response**:
 ```json
 {
   "status": "healthy",
@@ -162,12 +236,65 @@ curl -X GET http://localhost:8000/health
 }
 ```
 
-### 2. Calculate Features (Structured Format)
-**Purpose**: Calculate features from structured JSON data
+**Status Codes**:
+- `200 OK`: Service is healthy
+- `500 Internal Server Error`: Service unavailable
 
-**Request:**
+---
+
+#### 2. Root Information Endpoint
+
+**Endpoint**: `GET /`
+
+**Description**: Provides basic API information and available endpoints.
+
+**Request**:
 ```bash
-curl -X POST "http://localhost:8000/calculate-features" \
+curl -X GET http://localhost:8002/
+```
+
+**Response**:
+```json
+{
+  "message": "ML Feature Engineering Service",
+  "description": "Submit application data to calculate financial features",
+  "endpoints": {
+    "POST /calculate-features": "Calculate features from application data",
+    "GET /health": "Health check endpoint"
+  }
+}
+```
+
+---
+
+#### 3. Calculate Features (Structured Format)
+
+**Endpoint**: `POST /calculate-features`
+
+**Description**: Calculates financial features from structured application data.
+
+**Request Schema**:
+```json
+{
+  "id": "string (optional)",
+  "application_date": "string (required)",
+  "contracts": [
+    {
+      "contract_id": "string (optional)",
+      "bank": "string (optional)",
+      "summa": "string (optional)",
+      "loan_summa": "string (optional)",
+      "claim_date": "string (optional)",
+      "claim_id": "string (optional)",
+      "contract_date": "string (optional)"
+    }
+  ]
+}
+```
+
+**Example Request**:
+```bash
+curl -X POST "http://localhost:8002/calculate-features" \
   -H "Content-Type: application/json" \
   -d '{
     "id": "application_123",
@@ -181,47 +308,90 @@ curl -X POST "http://localhost:8000/calculate-features" \
         "claim_date": "10.01.2024",
         "claim_id": "CLAIM_001",
         "contract_date": "15.01.2024"
+      },
+      {
+        "contract_id": "CONTRACT_002",
+        "bank": "LIZ",
+        "summa": "500000",
+        "loan_summa": "400000",
+        "claim_date": "05.01.2024",
+        "claim_id": "CLAIM_002",
+        "contract_date": "20.01.2024"
       }
     ]
   }'
 ```
 
-**Response:**
+**Response**:
 ```json
 {
   "id": "application_123",
   "application_date": "2024-02-12T19:24:29.135000",
+  "tot_claim_cnt_l180d": 2,
+  "disb_bank_loan_wo_tbc": 800000.0,
+  "day_sinlastloan": 23
+}
+```
+
+**Feature Explanations**:
+- **tot_claim_cnt_l180d**: Number of claims within 180 days (2 claims found)
+- **disb_bank_loan_wo_tbc**: Sum of loans excluding TBC banks (LIZ bank excluded)
+- **day_sinlastloan**: Days since most recent loan (23 days from CONTRACT_002)
+
+---
+
+#### 4. Calculate Features (JSON String Format)
+
+**Endpoint**: `POST /calculate-features-from-json`
+
+**Description**: Calculates features from CSV-style JSON string data format.
+
+**Request Schema**:
+```json
+{
+  "id": "string (optional)",
+  "application_date": "string (required)",
+  "contracts": "string (JSON array as string)"
+}
+```
+
+**Example Request**:
+```bash
+curl -X POST "http://localhost:8002/calculate-features-from-json" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "application_456",
+    "application_date": "2024-02-12 19:24:29.135000+00:00",
+    "contracts": "[{\"contract_id\": \"CONTRACT_001\", \"bank\": \"003\", \"summa\": \"1000000\", \"loan_summa\": \"800000\", \"claim_date\": \"10.01.2024\", \"claim_id\": \"CLAIM_001\", \"contract_date\": \"15.01.2024\"}]"
+  }'
+```
+
+**Response**:
+```json
+{
+  "id": "application_456",
+  "application_date": "2024-02-12 19:24:29.135000+00:00",
   "tot_claim_cnt_l180d": 1,
   "disb_bank_loan_wo_tbc": 800000.0,
   "day_sinlastloan": 28
 }
 ```
 
-### 3. Calculate Features (JSON String Format)
-**Purpose**: Calculate features from CSV-like JSON string data
+---
 
-**Request:**
-```bash
-curl -X POST "http://localhost:8000/calculate-features-from-json" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "id": "application_123",
-    "application_date": "2024-02-12 19:24:29.135000+00:00",
-    "contracts": "[{\"contract_id\": \"CONTRACT_001\", \"bank\": \"003\", \"summa\": 1000000, \"loan_summa\": 800000, \"claim_date\": \"10.01.2024\", \"claim_id\": \"CLAIM_001\", \"contract_date\": \"15.01.2024\"}]"
-  }'
-```
+### Programming Examples
 
-### 4. Python Example
+#### Python Example
 ```python
 import requests
 import json
 
 # API configuration
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = "http://localhost:8002"
 
 # Example data
 data = {
-    "id": "python_test_001",
+    "id": "python_example_001",
     "application_date": "2024-02-12T19:24:29.135000",
     "contracts": [
         {
@@ -243,324 +413,132 @@ try:
     if response.status_code == 200:
         result = response.json()
         print("✓ Features calculated successfully:")
-        print(f"  - Total claims (180d): {result['tot_claim_cnt_l180d']}")
-        print(f"  - Disbursed loans (no TBC): {result['disb_bank_loan_wo_tbc']}")
+        print(f"  - ID: {result['id']}")
+        print(f"  - Application Date: {result['application_date']}")
+        print(f"  - Claims (180d): {result['tot_claim_cnt_l180d']}")
+        print(f"  - Disbursed Loans: {result['disb_bank_loan_wo_tbc']}")
         print(f"  - Days since last loan: {result['day_sinlastloan']}")
     else:
-        print(f"✗ Error: {response.status_code}")
-        print(f"  Response: {response.text}")
+        print(f"✗ Error: {response.status_code} - {response.text}")
         
-except requests.exceptions.RequestException as e:
-    print(f"✗ Connection error: {e}")
+except requests.RequestException as e:
+    print(f"✗ Request failed: {e}")
 ```
 
-### 5. JavaScript Example
+#### JavaScript Example
 ```javascript
-const axios = require('axios');
-
-// API configuration
-const API_BASE_URL = 'http://localhost:8000';
-
-// Example data
-const data = {
-    id: 'javascript_test_001',
-    application_date: '2024-02-12T19:24:29.135000',
-    contracts: [
-        {
-            contract_id: 'CONTRACT_001',
-            bank: '003',
-            summa: '1000000',
-            loan_summa: '800000',
-            claim_date: '10.01.2024',
-            claim_id: 'CLAIM_001',
-            contract_date: '15.01.2024'
+// JavaScript example using fetch
+async function calculateFeatures() {
+    const apiUrl = 'http://localhost:8002/calculate-features';
+    
+    const data = {
+        id: 'js_example_001',
+        application_date: '2024-02-12T19:24:29.135000',
+        contracts: [
+            {
+                contract_id: 'CONTRACT_001',
+                bank: '003',
+                summa: '1000000',
+                loan_summa: '800000',
+                claim_date: '10.01.2024',
+                claim_id: 'CLAIM_001',
+                contract_date: '15.01.2024'
+            }
+        ]
+    };
+    
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log('✓ Features calculated successfully:');
+            console.log('  - Claims (180d):', result.tot_claim_cnt_l180d);
+            console.log('  - Disbursed Loans:', result.disb_bank_loan_wo_tbc);
+            console.log('  - Days since last loan:', result.day_sinlastloan);
+        } else {
+            console.error('✗ Error:', response.status, await response.text());
         }
-    ]
-};
+    } catch (error) {
+        console.error('✗ Request failed:', error);
+    }
+}
 
-// Send request
-axios.post(`${API_BASE_URL}/calculate-features`, data)
-    .then(response => {
-        console.log('✓ Features calculated successfully:');
-        console.log(`  - Total claims (180d): ${response.data.tot_claim_cnt_l180d}`);
-        console.log(`  - Disbursed loans (no TBC): ${response.data.disb_bank_loan_wo_tbc}`);
-        console.log(`  - Days since last loan: ${response.data.day_sinlastloan}`);
-    })
-    .catch(error => {
-        console.error('✗ Error:', error.response?.data || error.message);
-    });
+// Call the function
+calculateFeatures();
 ```
 
 ---
 
-## API Endpoints
+### Error Handling
 
-### 1. GET /health
-**Description**: Health check endpoint
-**Response**: Service status information
+#### Common Error Responses
 
-### 2. GET /
-**Description**: Root endpoint with API information
-**Response**: API welcome message and available endpoints
-
-### 3. POST /calculate-features
-**Description**: Calculate features from structured data
-**Request Body**: ApplicationRequest model
-**Response**: FeatureResponse model with calculated features
-
-### 4. POST /calculate-features-from-json
-**Description**: Calculate features from JSON string format
-**Request Body**: Dictionary with JSON string contracts
-**Response**: FeatureResponse model with calculated features
-
-### Feature Descriptions
-
-#### tot_claim_cnt_l180d
-- **Purpose**: Count claims within 180 days before application date
-- **Logic**: Filters claims where claim_date is within 180 days of application_date
-- **Format**: claim_date in DD.MM.YYYY format
-- **Special Values**: -3 if no claims found
-
-#### disb_bank_loan_wo_tbc
-- **Purpose**: Sum of disbursed loan amounts excluding TBC banks
-- **Logic**: Excludes banks ['LIZ', 'LOM', 'MKO', 'SUG', null], sums loan_summa
-- **Conditions**: Only includes loans where loan_summa > 0
-- **Special Values**: -1 if no loans, -3 if no claims
-
-#### day_sinlastloan
-- **Purpose**: Days between last loan and application date
-- **Logic**: Finds most recent contract_date, calculates difference
-- **Format**: contract_date in DD.MM.YYYY format
-- **Special Values**: -1 if no loans, -3 if no claims
-
----
-
-## Testing the API
-
-### 1. Interactive API Tester
-**Access**: http://localhost:5002/docs
-
-**Features**:
-- **Real-time Status**: Green/red indicator for API server status
-- **Endpoint Selection**: Dropdown menu with all available endpoints
-- **Sample Data**: Pre-populated request bodies for testing
-- **Live Testing**: Send requests and view formatted responses
-- **Copy Functions**: Copy request/response data to clipboard
-
-**How to Use**:
-1. Open http://localhost:5002/docs in your browser
-2. Verify "API server is online" status (green indicator)
-3. Select an endpoint from the dropdown
-4. Review the auto-populated request body
-5. Click "Send Request"
-6. View the formatted response
-
-### 2. Manual Testing Steps
-
-#### Test Health Endpoint
-```bash
-curl -X GET http://localhost:8000/health
-# Expected: {"status":"healthy","service":"ML Feature Engineering Service"}
-```
-
-#### Test Feature Calculation
-```bash
-curl -X POST "http://localhost:8000/calculate-features" \
-  -H "Content-Type: application/json" \
-  -d '{"id":"test","application_date":"2024-02-12T19:24:29.135000","contracts":[]}'
-# Expected: Feature response with special values for empty contracts
-```
-
-#### Test with Real Data
-```bash
-curl -X POST "http://localhost:8000/calculate-features" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "id": "real_test",
-    "application_date": "2024-02-12T19:24:29.135000",
-    "contracts": [
-      {
-        "contract_id": "CONTRACT_001",
-        "bank": "003",
-        "summa": "1000000",
-        "loan_summa": "800000",
-        "claim_date": "10.01.2024",
-        "claim_id": "CLAIM_001",
-        "contract_date": "15.01.2024"
-      }
-    ]
-  }'
-```
-
-### 3. Test Cases
-
-#### Edge Case: No Contracts
+**400 Bad Request**:
 ```json
 {
-  "id": "no_contracts_test",
-  "application_date": "2024-02-12T19:24:29.135000",
-  "contracts": []
+  "detail": "Error calculating features: Invalid date format"
 }
 ```
-**Expected Result**: All features return -3 (no claims)
 
-#### Edge Case: TBC Bank Only
+**422 Unprocessable Entity**:
 ```json
 {
-  "id": "tbc_only_test",
-  "application_date": "2024-02-12T19:24:29.135000",
-  "contracts": [
+  "detail": [
     {
-      "contract_id": "TBC_CONTRACT",
-      "bank": "LIZ",
-      "summa": "1000000",
-      "loan_summa": "800000",
-      "claim_date": "10.01.2024",
-      "claim_id": "TBC_CLAIM",
-      "contract_date": "15.01.2024"
+      "loc": ["body", "application_date"],
+      "msg": "field required",
+      "type": "value_error.missing"
     }
   ]
 }
 ```
-**Expected Result**: disb_bank_loan_wo_tbc = 0 (TBC bank excluded)
 
-#### Edge Case: Multiple Contracts
+**500 Internal Server Error**:
 ```json
 {
-  "id": "multiple_contracts_test",
-  "application_date": "2024-02-12T19:24:29.135000",
-  "contracts": [
-    {
-      "contract_id": "CONTRACT_001",
-      "bank": "003",
-      "summa": "1000000",
-      "loan_summa": "800000",
-      "claim_date": "10.01.2024",
-      "claim_id": "CLAIM_001",
-      "contract_date": "15.01.2024"
-    },
-    {
-      "contract_id": "CONTRACT_002",
-      "bank": "005",
-      "summa": "500000",
-      "loan_summa": "300000",
-      "claim_date": "20.01.2024",
-      "claim_id": "CLAIM_002",
-      "contract_date": "25.01.2024"
-    }
-  ]
+  "detail": "Internal server error"
 }
 ```
-**Expected Result**: 
-- tot_claim_cnt_l180d = 2 (both claims within 180 days)
-- disb_bank_loan_wo_tbc = 1,100,000 (sum of both loans)
-- day_sinlastloan = 18 (days since Jan 25, 2024)
 
 ---
 
-## Troubleshooting
+### Interactive Testing
 
-### Common Issues
+For interactive testing, visit the documentation server at:
+- **Beautiful Docs**: http://localhost:5002/docs
+- **Interactive Tester**: http://localhost:5002/docs#testing
+- **Code Examples**: http://localhost:5002/docs#examples
 
-#### 1. API Server Not Starting
-**Problem**: `ModuleNotFoundError` or import errors
-**Solution**:
-```bash
-# Ensure conda environment is activated
-conda activate new_nlp
+![API Documentation Interface](../api_docs_screenshot.png)
 
-# Reinstall dependencies
-pip install -r requirements.txt
-
-# Check if FastAPI is installed
-python -c "import fastapi; print('FastAPI installed')"
-```
-
-#### 2. Port Already in Use
-**Problem**: `Address already in use` error
-**Solution**:
-```bash
-# Find process using port 8000
-lsof -i :8000
-
-# Kill the process (replace PID with actual process ID)
-kill -9 <PID>
-
-# Or use a different port
-python -m uvicorn main:app --host 0.0.0.0 --port 8001 --reload
-```
-
-#### 3. Documentation Server Issues
-**Problem**: npm dependencies not installed
-**Solution**:
-```bash
-cd docs
-rm -rf node_modules
-npm install
-npm start
-```
-
-#### 4. CORS Errors
-**Problem**: Browser requests blocked
-**Solution**:
-- Ensure both servers are running
-- Check main.py has CORS middleware configured
-- Verify documentation server is on port 5002
-
-#### 5. Date Format Errors
-**Problem**: Date parsing failures
-**Solution**:
-- Use DD.MM.YYYY format for claim_date and contract_date
-- Use ISO format for application_date: YYYY-MM-DDTHH:MM:SS.ffffff
-- Ensure dates are strings, not integers
-
-#### 6. Invalid JSON Format
-**Problem**: JSON parsing errors
-**Solution**:
-- Validate JSON format using online tools
-- Check for missing quotes, commas, or brackets
-- Ensure proper escaping in JSON string format
-
-### Debug Commands
-
-#### Check API Status
-```bash
-curl -X GET http://localhost:8000/health -v
-```
-
-#### Test with Verbose Output
-```bash
-curl -X POST "http://localhost:8000/calculate-features" \
-  -H "Content-Type: application/json" \
-  -d '{"id":"debug","application_date":"2024-02-12T19:24:29.135000","contracts":[]}' \
-  -v
-```
-
-#### View Server Logs
-```bash
-# Start with debug logging
-python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
-```
-
-### Performance Tips
-
-1. **Batch Processing**: Send multiple applications in separate requests
-2. **Connection Pooling**: Use connection pooling for high-volume requests
-3. **Caching**: Cache frequent calculations if data doesn't change
-4. **Monitoring**: Monitor response times and error rates
+The interactive tester allows you to:
+1. Test API endpoints directly from your browser
+2. Modify request parameters in real-time
+3. View formatted responses
+4. Generate code examples in multiple languages
+5. Monitor API server status
 
 ---
 
-## Summary
+### Troubleshooting
 
-This ML Feature Engineering API provides a robust solution for calculating financial features from contract data. The combination of FastAPI for the backend and a beautiful interactive documentation interface makes it easy to integrate, test, and maintain.
+#### Common Issues
 
-**Key Benefits**:
-- ✅ **Fast Processing**: Efficient feature calculation
-- ✅ **Easy Testing**: Interactive API tester
-- ✅ **Comprehensive Documentation**: Clear examples and instructions
-- ✅ **Error Handling**: Robust validation and error messages
-- ✅ **Scalable**: Can handle multiple contracts and applications
-- ✅ **Developer Friendly**: Hot reload and debugging support
+1. **Port already in use**: If ports 8002 or 5002 are occupied, modify the port settings in `main.py` and `docs/server.js`
 
-For additional support, use the interactive documentation at http://localhost:5002/docs or refer to the FastAPI auto-documentation at http://localhost:8000/docs. 
+2. **Dependencies not installed**: Ensure all requirements are installed using `pip install -r requirements.txt`
+
+3. **CORS errors**: The API includes CORS middleware for localhost origins. For production, update the allowed origins.
+
+4. **Date format issues**: Ensure dates are in DD.MM.YYYY format for contract dates or ISO format for application dates
+
+5. **Invalid JSON**: When using the JSON string endpoint, ensure the contracts string is properly escaped JSON
+
+For additional support, check the server logs or visit the interactive documentation for real-time testing. 
