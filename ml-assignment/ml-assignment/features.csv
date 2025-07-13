@@ -1,0 +1,20 @@
+No,Feature,Logic,If missing value,
+1,tot_claim_cnt_l180d,"Description: Number of claims made in the 180 days before the application_date.
+Source: contracts
+Key fields: claim_id, claim_date
+Special notes: 
+1. In case claim date is null, don't take into consideration such claims.","In case no claims, then put -3 as a value of this feature.",
+2,disb_bank_loan_wo_tbc,"Description: Sum of disbursed loans exposure without TBC loans. 
+Source: contracts
+Key fields: bank, loan_summa, contract_date
+Special notes: 
+1. Consider only loans where field ""bank"" is not in ['LIZ', 'LOM', 'MKO', 'SUG', null].
+2. Disbursed loans means loans where contract_date is not null. 
+3. Exposure means here field loan_summa.","In case no claims, then put -3 as a value of this feature.
+If no loans at all, then put -1 as a value of this feature.",
+3,day_sinlastloan,"Description: Number of days since last loan. 
+Source: contracts
+Key fields: contract_date, summa
+Special notes:
+1. Take last loan of client where summa is not null and calculate number of days from contract_date of this loan to application_date.","In case no claims at all, then put -3 as a value of this feature.
+In case no loans at all, then put -1 as a value of this feature.",
