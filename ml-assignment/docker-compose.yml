@@ -1,0 +1,31 @@
+services:
+  ml-feature-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ml-feature-api
+    ports:
+      - "8002:8002"  # FastAPI server
+      - "5002:5002"  # Documentation server
+    environment:
+      - PYTHONUNBUFFERED=1
+      - NODE_ENV=production
+    volumes:
+      - ./ml-assignment:/app/ml-assignment:ro  # Mount data directory as read-only
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    networks:
+      - ml-network
+
+networks:
+  ml-network:
+    driver: bridge
+
+volumes:
+  ml-data:
+    driver: local 

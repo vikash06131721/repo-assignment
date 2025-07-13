@@ -541,4 +541,210 @@ The interactive tester allows you to:
 
 5. **Invalid JSON**: When using the JSON string endpoint, ensure the contracts string is properly escaped JSON
 
-For additional support, check the server logs or visit the interactive documentation for real-time testing. 
+For additional support, check the server logs or visit the interactive documentation for real-time testing.
+
+---
+
+## Docker Deployment
+
+For production deployment or easier setup, you can use Docker to containerize the entire application.
+
+### Prerequisites
+- **Docker**: Install from [https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/)
+- **Docker Compose**: Usually included with Docker Desktop
+
+### Docker Deployment Methods
+
+#### Method 1: Using Docker Compose (Recommended)
+
+**Quick Start:**
+```bash
+# Navigate to project directory
+cd ml-assignment
+
+# Start with Docker Compose
+docker compose up -d
+
+# View logs
+docker compose logs -f
+
+# Stop services
+docker compose down
+```
+
+**Using the Docker Start Script:**
+```bash
+# Make script executable
+chmod +x docker-start.sh
+
+# Start all services
+./docker-start.sh
+
+# Or use specific commands
+./docker-start.sh stop     # Stop containers
+./docker-start.sh restart  # Restart containers
+./docker-start.sh logs     # View logs
+./docker-start.sh status   # Check status
+```
+
+#### Method 2: Manual Docker Build
+
+**Build the image:**
+```bash
+# Build Docker image
+docker build -t ml-feature-api .
+
+# Run container
+docker run -d \
+  --name ml-feature-api \
+  -p 8002:8002 \
+  -p 5002:5002 \
+  -v $(pwd)/ml-assignment:/app/ml-assignment:ro \
+  ml-feature-api
+```
+
+### Docker Configuration
+
+#### Dockerfile Features
+- **Multi-stage build**: Optimized for production
+- **Python 3.8+ runtime**: All required dependencies
+- **Node.js 18**: For documentation server
+- **Health checks**: Automatic container health monitoring
+- **Non-root user**: Security best practices
+
+#### Docker Compose Features
+- **Automatic restart**: Container restarts if it crashes
+- **Volume mounting**: Data directory mounted as read-only
+- **Network isolation**: Containers run in isolated network
+- **Health monitoring**: Built-in health check endpoints
+
+### Environment Variables
+
+You can customize the Docker deployment using environment variables:
+
+```bash
+# In docker-compose.yml or command line
+PYTHONUNBUFFERED=1          # Python logging
+NODE_ENV=production         # Node.js environment
+```
+
+### Container Management
+
+#### Common Docker Commands
+
+**View running containers:**
+```bash
+docker compose ps
+```
+
+**View container logs:**
+```bash
+# All logs
+docker compose logs -f
+
+# Specific service logs
+docker compose logs -f ml-feature-api
+```
+
+**Execute commands in container:**
+```bash
+# Access container shell
+docker compose exec ml-feature-api sh
+
+# Run Python scripts
+docker compose exec ml-feature-api python3 data_analysis.py
+```
+
+**Update and rebuild:**
+```bash
+# Rebuild with latest changes
+docker compose down
+docker compose build --no-cache
+docker compose up -d
+```
+
+### Health Monitoring
+
+The Docker container includes built-in health checks:
+
+```bash
+# Check container health
+docker compose ps
+
+# View health check logs
+docker inspect ml-feature-api | grep -A 10 Health
+```
+
+**Health check endpoint:**
+- **URL**: http://localhost:8002/health
+- **Interval**: Every 30 seconds
+- **Timeout**: 10 seconds
+- **Retries**: 3 attempts
+- **Start period**: 40 seconds
+
+### Production Considerations
+
+#### Security
+- Container runs as non-root user
+- Data directory mounted as read-only
+- Network isolation between containers
+- No unnecessary packages installed
+
+#### Performance
+- Multi-stage build reduces image size
+- Alpine Linux base for minimal footprint
+- Optimized Python and Node.js dependencies
+- Efficient resource usage
+
+#### Scaling
+```bash
+# Scale to multiple instances
+docker compose up -d --scale ml-feature-api=3
+
+# Use load balancer (nginx, traefik, etc.)
+# Configure container orchestration (Kubernetes, Docker Swarm)
+```
+
+### Troubleshooting Docker Issues
+
+#### Container Won't Start
+```bash
+# Check container logs
+docker compose logs ml-feature-api
+
+# Check Docker daemon
+docker info
+
+# Rebuild with verbose output
+docker compose build --no-cache --progress=plain
+```
+
+#### Port Conflicts
+```bash
+# Check port usage
+lsof -i :8002
+lsof -i :5002
+
+# Use different ports
+docker compose up -d -p 8003:8002 -p 5003:5002
+```
+
+#### Performance Issues
+```bash
+# Monitor resource usage
+docker stats ml-feature-api
+
+# Increase memory limits
+docker compose up -d --memory=1g
+```
+
+### Docker Advantages
+
+✅ **Consistency**: Same environment across development and production
+✅ **Isolation**: No conflicts with system dependencies
+✅ **Scalability**: Easy to scale horizontally
+✅ **Portability**: Runs on any Docker-compatible system
+✅ **Security**: Isolated container environment
+✅ **Maintainability**: Version-controlled infrastructure
+
+For additional Docker support, check the container logs with `docker compose logs -f` or visit the interactive documentation at http://localhost:5002/docs. 
