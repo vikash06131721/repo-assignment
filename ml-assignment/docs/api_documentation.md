@@ -59,6 +59,33 @@ Our solution addresses all the identified challenges through a comprehensive Fas
 
 ---
 
+## Video Explanation
+
+For a comprehensive visual walkthrough of our ML Feature Engineering API, watch this detailed video explanation:
+
+### 🎥 API Demo & Overview
+
+**Video**: [ML Feature Engineering API - Complete Walkthrough](https://drive.google.com/file/d/1RntYCCrJQJq7goB5RiulV08wwKjzpWZf/view?usp=sharing)
+
+This video covers:
+- **Live API demonstration** with real examples
+- **Feature calculation walkthrough** showing all three features
+- **Interactive documentation usage** and testing
+- **Step-by-step setup guide** from installation to deployment
+- **Docker containerization** and deployment process
+- **Real-world use cases** and business applications
+- **Error handling** and troubleshooting scenarios
+
+### 📺 How to View
+
+1. **Click the link above** to open the video in Google Drive
+2. **Full-screen viewing**: Use the full-screen option for better visibility
+3. **Download option**: You can download the video for offline viewing if needed
+
+The video provides a practical, hands-on demonstration that complements this written documentation, making it easier to understand the API's capabilities and implementation.
+
+---
+
 ## How to Start the API
 
 ### Prerequisites
